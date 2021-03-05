@@ -8,19 +8,23 @@ import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { MapComponent } from './map/map.component';
 import { ListComponent } from './list/list.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
-    ListComponent
+    ListComponent,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
     FormsModule,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

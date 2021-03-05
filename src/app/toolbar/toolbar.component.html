@@ -1,0 +1,41 @@
+<section>
+  <mat-toolbar color="accent" fxLayout>
+    <div
+      fxLayout
+      fxLayoutAlign="space-between center"
+      class="toolbar-button-container"
+      fxLayoutGap="0"
+    >
+      <button mat-button class="btn">
+        <p class="btn-para-one">Total Truck</p>
+        <p class="btn-para-two">120</p>
+      </button>
+      <button mat-button class="btn">
+        <p class="btn-para-one">Runnig Truck</p>
+        <p class="btn-para-two">9</p>
+      </button>
+      <button mat-button class="btn">
+        <p class="btn-para-one">Stopped Truck</p>
+        <p class="btn-para-two">98</p>
+      </button>
+      <button mat-button class="btn">
+        <p class="btn-para-one">Idle Truck</p>
+        <p class="btn-para-two">0</p>
+      </button>
+      <button mat-button class="btn">
+        <p class="btn-para-one">Error Truck</p>
+        <p class="btn-para-two">120</p>
+      </button>
+      <div fxFlexAlign="baseline" class="toolbar-select">
+        <mat-form-field appearance="legacy">
+          <mat-label>Select</mat-label>
+          <mat-select [formControl]="toppings" multiple>
+            <mat-option *ngFor="let topping of toppingList" [value]="topping">{{
+              topping
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-toolbar>
+</section>
