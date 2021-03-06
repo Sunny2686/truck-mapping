@@ -1,9 +1,10 @@
 .below-toolbar{
   height: 100vh !important;
   display: flex;
-  justify-content: start;
-  align-items: start;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
 }
 app-list{
-  height: inherit;
+  height: 100%;
 }

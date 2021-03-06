@@ -8,15 +8,15 @@
     >
       <button mat-button class="btn">
         <p class="btn-para-one">Total Truck</p>
-        <p class="btn-para-two">120</p>
+        <p class="btn-para-two">{{ truckNumberArray.length }}</p>
       </button>
       <button mat-button class="btn">
         <p class="btn-para-one">Runnig Truck</p>
-        <p class="btn-para-two">9</p>
+        <p class="btn-para-two">{{ runningTruck }}</p>
       </button>
       <button mat-button class="btn">
         <p class="btn-para-one">Stopped Truck</p>
-        <p class="btn-para-two">98</p>
+        <p class="btn-para-two">{{ stoppedTruck }}</p>
       </button>
       <button mat-button class="btn">
         <p class="btn-para-one">Idle Truck</p>
@@ -24,15 +24,17 @@
       </button>
       <button mat-button class="btn">
         <p class="btn-para-one">Error Truck</p>
-        <p class="btn-para-two">120</p>
+        <p class="btn-para-two">{{ runningTruck - 5 }}</p>
       </button>
       <div fxFlexAlign="baseline" class="toolbar-select">
         <mat-form-field appearance="legacy">
           <mat-label>Select</mat-label>
           <mat-select [formControl]="toppings" multiple>
-            <mat-option *ngFor="let topping of toppingList" [value]="topping">{{
-              topping
-            }}</mat-option>
+            <mat-option
+              *ngFor="let topping of truckNumberArray"
+              [value]="topping"
+              >{{ topping }}</mat-option
+            >
           </mat-select>
         </mat-form-field>
       </div>

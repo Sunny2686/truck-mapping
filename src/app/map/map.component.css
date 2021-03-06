@@ -1,0 +1,11 @@
+.map-container{
+height: inherit;
+
+}
+.map-frame{
+  height: 100%;
+}
+
+#map{
+  height: 100%;
+}
