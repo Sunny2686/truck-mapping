@@ -3,11 +3,10 @@
     <input
       type="text"
       aria-label="Subject"
-      [matAutocomplete]="auto"
       [formControl]="myControl"
       placeholder="Search Truck"
     />
-    <mat-autocomplete #auto="matAutocomplete">
+    <!-- <mat-autocomplete #auto="matAutocomplete">
       <mat-option
         *ngFor="let subject of filteredSubjects | async"
         [value]="subject"
@@ -15,28 +14,60 @@
         {{ subject }}
       </mat-option>
     </mat-autocomplete>
+  [matAutocomplete]="auto"-->
   </form>
   <!-- -------------------------------------------------- -->
   <mat-list role="list" class="truck-list">
-    <mat-list-item class="list-item-class" *ngFor="let ele of allTrucksDetails">
-      <div class="list-item-left-class">
-        <p class="list-item-left-class-para-one">
-          {{ ele.truckNumber }}
-          <span
-            ><mat-icon aria-hidden="false"> airport_shuttle </mat-icon></span
-          >
-        </p>
-        <p class="list-item-left-class-para-two">
-          {{ ele.truckRunningState ? "Running" : " Stopped" }} since last
-          {{ ele.stopStartTime }}
-        </p>
-      </div>
-      <div class="list-item-right-class">
-        <p class="list-item-left-class-para-two">22 min</p>
-        <p class="list-item-left-class-para-two" *ngIf="ele.speed">
-          {{ ele.speed | number: "1.0-1" }}k/h
-        </p>
-      </div>
-    </mat-list-item>
+    <ng-container *ngIf="!containerBoolean">
+      <mat-list-item
+        class="list-item-class"
+        *ngFor="let ele of filteredTrucksList"
+      >
+        <div class="list-item-left-class">
+          <p class="list-item-left-class-para-one">
+            {{ ele.truckNumber }}
+            <span
+              ><mat-icon aria-hidden="false"> airport_shuttle </mat-icon></span
+            >
+          </p>
+          <p class="list-item-left-class-para-two">
+            {{ ele.truckRunningState ? "Running" : " Stopped" }} since last
+            {{ ele.stopStartTime }}
+          </p>
+        </div>
+        <div class="list-item-right-class">
+          <p class="list-item-left-class-para-two">{{ randomNumber }}m</p>
+          <p class="list-item-left-class-para-two" *ngIf="ele.speed">
+            {{ ele.speed | number: "1.0-1" }}k/h
+          </p>
+        </div>
+      </mat-list-item>
+    </ng-container>
+    <!-- ------------------------------------------------------------------------------------------------------------ -->
+    <ng-container *ngIf="containerBoolean">
+      <mat-list-item
+        class="list-item-class"
+        *ngFor="let ele of filteredTrucksList"
+      >
+        <div class="list-item-left-class">
+          <p class="list-item-left-class-para-one">
+            {{ ele.truckNumber }}
+            <span
+              ><mat-icon aria-hidden="false"> airport_shuttle </mat-icon></span
+            >
+          </p>
+          <p class="list-item-left-class-para-two">
+            {{ ele.truckRunningState ? "Running" : " Stopped" }} since last
+            {{ ele.stopStartTime }}
+          </p>
+        </div>
+        <div class="list-item-right-class">
+          <p class="list-item-left-class-para-two">{{ randomNumber }}m</p>
+          <p class="list-item-left-class-para-two" *ngIf="ele.speed">
+            {{ ele.speed | number: "1.0-1" }}k/h
+          </p>
+        </div>
+      </mat-list-item>
+    </ng-container>
   </mat-list>
 </div>

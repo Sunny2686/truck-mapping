@@ -8,12 +8,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'mapping-truck';
+  recevingNumberFromToolbar: any;
+  recevingBooleanFromToolbar: any;
   constructor() {
 
   }
 
-  ngOnInit() {
+  ngOnInit() { }
 
-  }
 }

@@ -13,7 +13,10 @@ export class MapService {
 
   private url = "https://api.mystral.in/tt/mobile/logistics/searchTrucks?auth-company=PCH&companyId=33&deactivated=false&key=g2qb5jvucg7j8skpu5q7ria0mu&q-expand=true&q-include=lastRunningState,lastWaypoint";
 
-  responseArray = new Subject();
+  passingNumberTolist = new Subject<number>();
+  passingFilteredArrayToMap = new Subject<any[]>();
+  responseArray = new Subject<any[]>();
+  passingSelectorValueArray = new BehaviorSubject<string[]>([]);
   constructor(private http: HttpClient) {
 
     //Making an API call to serve

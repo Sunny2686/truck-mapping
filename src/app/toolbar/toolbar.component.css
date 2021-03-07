@@ -19,12 +19,12 @@ mat-toolbar{
   padding: 0;
   height: inherit;
   width: 20%;
-  transition: background-color 1s;
+  transition: background-color 1.7s;
   transition-timing-function: ease-in-out;
   border-radius: 0;
 }
 .btn:hover,.btn:active{
-  background-color:rgb(139, 136, 136);
+  background-color:rgb(179, 174, 174);
   font-size: calc(0.7rem + 0.6vw);
 }
 
