@@ -6,23 +6,23 @@
       class="toolbar-button-container"
       fxLayoutGap="0"
     >
-      <button mat-button class="btn" (click)="onTTButtonClick()">
+      <button mat-button class="btn" (click)="onTTButtonClick($event)">
         <p class="btn-para-one">Total Truck</p>
         <p class="btn-para-two">{{ truckNumberArray.length }}</p>
       </button>
-      <button mat-button class="btn" (click)="onRTButtonClick()">
+      <button mat-button class="btn" (click)="onRTButtonClick($event)">
         <p class="btn-para-one">Runnig Truck</p>
         <p class="btn-para-two">{{ runningTruck }}</p>
       </button>
-      <button mat-button class="btn" (click)="onSTButtonClick()">
+      <button mat-button class="btn" (click)="onSTButtonClick($event)">
         <p class="btn-para-one">Stopped Truck</p>
         <p class="btn-para-two">{{ stoppedTruck }}</p>
       </button>
-      <button mat-button class="btn" (click)="onITButtonClick()">
+      <button mat-button class="btn" (click)="onITButtonClick($event)">
         <p class="btn-para-one">Idle Truck</p>
         <p class="btn-para-two">{{ idleTruck }}</p>
       </button>
-      <button mat-button class="btn" (click)="onETButtonClick()">
+      <button mat-button class="btn" (click)="onETButtonClick($event)">
         <p class="btn-para-one">Error Truck</p>
         <p class="btn-para-two">{{ errorTruck }}</p>
       </button>

@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
+import { take } from 'rxjs/operators';
 import { MapService } from '../map.service';
 
 
@@ -14,7 +15,6 @@ export class MapComponent implements OnInit, AfterViewInit {
   constructor(private mapservice: MapService) { }
 
   ngOnInit(): void {
-
 
   }// End of init
 

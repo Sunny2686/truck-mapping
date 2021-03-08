@@ -2,6 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { CommunicationService } from '../communication.service';
 import { MapService } from '../map.service';
 
 @Component({
@@ -18,7 +19,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   myForm: FormGroup;
   formSubscripition: Subscription;
   responseSubscription: Subscription;
-  constructor(private mapservice: MapService) { }
+
+  constructor(private mapservice: MapService, private cumService: CommunicationService) { }
 
   ngOnInit(): void {
     // Initializing form
@@ -28,39 +30,45 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
     // Taking and maupulating response
     this.responseSubscription = this.mapservice.responseArray.subscribe((data: any) => {
-      for (let { truckNumber, lastRunningState: { truckRunningState }, lastWaypoint: { ignitionOn, updateTime } } of data) {
+      for (let { truckNumber, truckRunningState, ignitionOn, updateTime } of data) {
         this.truckNumberArray.push(truckNumber);
         truckRunningState ? this.runningTruck++ : this.stoppedTruck++;
         if (ignitionOn && !truckRunningState) this.idleTruck++;
         if (new Date(updateTime).getHours() < 10) this.errorTruck++;
       }
     });
+
     //Pasing selector value to truck list
     this.formSubscripition = this.myForm.get('selectFormControl').valueChanges.subscribe((val) => {
-      this.mapservice.passingSelectorValueArray.next(val)
+      this.cumService.passingSelectorValueArray.next(val)
     })
 
   }
 
-  onTTButtonClick() {
-    this.mapservice.passingNumberTolist.next(10);
+  onTTButtonClick(e: Event) {
+    e.preventDefault();
+    this.cumService.passingNumberTolist.next(10);
   }
 
-  onRTButtonClick() {
-    this.mapservice.passingNumberTolist.next(1);
+  onRTButtonClick(e: Event) {
+    e.preventDefault();
+    this.cumService.passingNumberTolist.next(1);
   }
 
-  onSTButtonClick() {
-    this.mapservice.passingNumberTolist.next(0);
+  onSTButtonClick(e: Event) {
+    e.preventDefault();
+    this.cumService.passingNumberTolist.next(0);
   }
 
-  onITButtonClick() {
-    this.mapservice.passingNumberTolist.next(3);
+  onITButtonClick(e: Event) {
+    e.preventDefault();
+    this.cumService.passingNumberTolist.next(3);
 
   }
 
-  onETButtonClick() {
-    this.mapservice.passingNumberTolist.next(2);
+  onETButtonClick(e: Event) {
+    e.preventDefault();
+    this.cumService.passingNumberTolist.next(2);
   }
 
   ngOnDestroy() {

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/Operators';
+import { CommunicationService } from '../communication.service';
 import { MapService } from '../map.service';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 
@@ -23,47 +24,13 @@ export class ListComponent implements OnInit, OnDestroy {
   myControl = new FormControl();
   truckState: number = 0;
   randomNumber: number;
-  constructor(private mapservice: MapService) { }
+  constructor(private mapservice: MapService, private cumService: CommunicationService) { }
 
   ngOnInit(): void {
-
-    this.randomNumber = Math.floor((Math.random() * 15) + 5);
-    // Receiving and Manupulating API data
-    this.subscription = this.mapservice.responseArray.subscribe((data: any) => {
-      // Checking for stopped or running status
-      for (let { truckNumber, lastWaypoint: { speed, ignitionOn, updateTime, lat, lng }, lastRunningState: { stopStartTime, truckRunningState } } of data) {
-
-        this.allTrucksNumber.push(truckNumber);
-        let delay: string;
-        if (new Date().getDay() - new Date(stopStartTime).getDay()) {
-          delay = `${new Date().getDay() - new Date(stopStartTime).getDay()} d`;
-        } else if (new Date().getHours() - new Date(stopStartTime).getHours()) {
-          delay = `${new Date().getHours() - new Date(stopStartTime).getHours()} hr`;
-        }
-        else {
-          delay = `${new Date().getMinutes() - new Date(stopStartTime).getMinutes()} m`;
-        }
-        const obj = { truckNumber: truckNumber, speed: speed, ignitionOn: ignitionOn, updateTime: updateTime, stopStartTime: delay, truckRunningState: truckRunningState, latitude: lat, longitude: lng }
-        this.allTrucksDetails.push(obj);
+    this.mapservice.responseArray.subscribe(data => {
+      for (let ele of data) {
+        this.allTrucksDetails.push(ele);
       }
-
-      //  Auto-filter trucks based on toolbar selector
-      this.passingSelectorValueArraySubs = this.mapservice.passingSelectorValueArray.
-        pipe(
-          tap((val) => {
-            if (val.length === 0) {
-              this.containerBoolean = true;
-            } else {
-              this.containerBoolean = false;
-            }
-          }),
-          startWith(''),
-          map(value => this.filterInputValue(value)))
-        .subscribe(val => {
-          this.filteredTrucksList = val
-          this.mapservice.passingFilteredArrayToMap.next(this.filteredTrucksList);
-
-        });
 
       // Auto-filter trucks based on user input
       this.filteredTruck1Subscription = this.myControl.valueChanges
@@ -73,24 +40,44 @@ export class ListComponent implements OnInit, OnDestroy {
           map(value => this.filterInputValue(value))
         ).subscribe(val => {
           this.filteredTrucksList = val;
-          this.mapservice.passingFilteredArrayToMap.next(this.filteredTrucksList);
+          this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
         });
 
+
+
       // Auto-filter trucks based on button click
-      this.filteredTruck2Subscription = this.mapservice.passingNumberTolist.
+      this.filteredTruck2Subscription = this.cumService.passingNumberTolist.
         pipe(
-          tap((val) => {
+          tap(() => {
             this.containerBoolean = false;
           }),
           startWith(''),
           map(value => this.filterInputValue(value))
         ).subscribe(val => {
           this.filteredTrucksList = val;
-          this.mapservice.passingFilteredArrayToMap.next(this.filteredTrucksList);
+          this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
         });
-    });
 
-  }// end of init
+      //  Auto-filter trucks based on toolbar selector
+      this.passingSelectorValueArraySubs = this.cumService.passingSelectorValueArray.
+        pipe(
+          tap(() => {
+            this.containerBoolean = false;
+          }),
+          startWith(''),
+          map(value => this.filterInputValue(value)))
+        .subscribe(val => {
+          this.filteredTrucksList = val
+          this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
+
+        });
+
+    });// End of response subscribe
+
+
+
+  }// End of ngon init
+
 
   // Filtering truck list data based on user input
   private filterInputValue(value: any): string[] {
@@ -130,6 +117,9 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
 
+
+
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
     this.filteredTruck1Subscription.unsubscribe();
@@ -137,5 +127,4 @@ export class ListComponent implements OnInit, OnDestroy {
     this.passingSelectorValueArraySubs.unsubscribe();
   }
 
-}
-
+}// End of class
