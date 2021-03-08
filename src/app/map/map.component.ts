@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { CommunicationService } from '../communication.service';
 import * as L from 'leaflet';
-import { take } from 'rxjs/operators';
-import { MapService } from '../map.service';
+import { take, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -12,14 +13,23 @@ import { MapService } from '../map.service';
 export class MapComponent implements OnInit, AfterViewInit {
   arr = [];
   private map;
-  constructor(private mapservice: MapService) { }
+  @Input() receivingFilteredList: any;
+  constructor(private communicationServie: CommunicationService) { }
 
+  count: number = 0;
   ngOnInit(): void {
 
   }// End of init
 
   ngAfterViewInit(): void {
     this.initMap();
+    this.communicationServie.passingFilteredArrayToMap
+      .subscribe(ele => {
+        for (let { latitude, longitude } of ele) {
+          if (this.count < 30) L.marker([latitude, longitude]).addTo(this.map);
+          this.count++;
+        }
+      });
   }
 
   private initMap(): void {
@@ -31,7 +41,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     tiles.addTo(this.map);
 
-    L.marker([31.221287, 75.6353452262]).addTo(this.map);
 
   }
 

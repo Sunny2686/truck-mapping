@@ -40,6 +40,10 @@ height: 86px !important;
 color: #000;
 }
 
+
+.error{
+background-color: rgb(150, 24, 24) !important;
+}
 .list-item-right-class{
 margin-left: 0.69rem;
 }

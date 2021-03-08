@@ -22,6 +22,7 @@ mat-toolbar{
   transition: background-color 1.7s;
   transition-timing-function: ease-in-out;
   border-radius: 0;
+  cursor:pointer;
 }
 .btn:hover,.btn:active{
   background-color:rgb(179, 174, 174);
@@ -54,4 +55,7 @@ mat-label{
 .toolbar-select{
   height: inherit;
   margin-right: 1rem;
+}
+.btn-para-one-error{
+  background-color:rgb(161, 12, 12);
 }

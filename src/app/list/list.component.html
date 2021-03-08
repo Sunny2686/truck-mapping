@@ -21,6 +21,7 @@
     <ng-container *ngIf="!containerBoolean">
       <mat-list-item
         class="list-item-class"
+        [class.error]="ele.truckErrorStatus"
         *ngFor="let ele of filteredTrucksList"
       >
         <div class="list-item-left-class">
@@ -47,6 +48,7 @@
     <ng-container *ngIf="containerBoolean">
       <mat-list-item
         class="list-item-class"
+        [class.error]="ele.truckErrorStatus"
         *ngFor="let ele of filteredTrucksList"
       >
         <div class="list-item-left-class">

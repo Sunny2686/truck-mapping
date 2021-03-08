@@ -1,5 +1,6 @@
-import { OnInit } from '@angular/core';
+import { OnInit, Output } from '@angular/core';
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -8,12 +9,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  recevingNumberFromToolbar: any;
-  recevingBooleanFromToolbar: any;
   constructor() {
 
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
+
+
+
 
 }
