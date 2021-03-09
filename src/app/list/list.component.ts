@@ -11,6 +11,7 @@ import { MapService } from '../map.service';
   styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit, OnDestroy {
+
   filteredTrucksList: any[];
   subscription: Subscription;
   filteredTruck2Subscription: Subscription;
@@ -29,9 +30,10 @@ export class ListComponent implements OnInit, OnDestroy {
 
     this.mapservice.responseArray
       .subscribe(data => {
-        for (let ele of data) {
-          this.allTrucksDetails.push(ele);
-        }
+        this.allTrucksDetails = data
+        // for (let ele of data) {
+        //   this.allTrucksDetails.push(ele);
+        // }
 
         // Auto-filter trucks based on user input
         this.filteredTruck1Subscription = this.myControl.valueChanges
@@ -68,6 +70,11 @@ export class ListComponent implements OnInit, OnDestroy {
             map(value => this.filterInputValue(value)))
           .subscribe(val => {
             this.filteredTrucksList = val
+            if (val.length === 0) {
+              for (let ele of this.allTrucksDetails) {
+                this.filteredTrucksList.push(ele);
+              }
+            }
             this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
           });
 
