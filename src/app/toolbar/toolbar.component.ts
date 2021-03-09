@@ -29,11 +29,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
     // Taking and maupulating response
     this.responseSubscription = this.mapservice.responseArray.subscribe((data: any) => {
-      for (let { truckNumber, truckRunningState, ignitionOn, updateTime } of data) {
+      for (let { truckNumber, truckRunningState, truckErrorStatus, truckIdleStatus } of data) {
         this.truckNumberArray.push(truckNumber);
         truckRunningState ? this.runningTruck++ : this.stoppedTruck++;
-        if (ignitionOn && !truckRunningState) this.idleTruck++;
-        if (new Date(updateTime).getHours() < 10) this.errorTruck++;
+        if (truckIdleStatus) this.idleTruck++;
+        if (truckErrorStatus) this.errorTruck++;
       }
     });
 
@@ -43,28 +43,27 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     })
 
   }
-
+  // function to responde on total trucks button click
   onTTButtonClick(e: Event) {
     e.preventDefault();
     this.cumService.passingNumberTolist.next(10);
   }
-
+  // function to responde on running trucks button click
   onRTButtonClick(e: Event) {
     e.preventDefault();
     this.cumService.passingNumberTolist.next(1);
   }
-
+  // function to responde on stopped trucks button click
   onSTButtonClick(e: Event) {
     e.preventDefault();
     this.cumService.passingNumberTolist.next(0);
   }
-
+  // function to responde on idle trucks button click
   onITButtonClick(e: Event) {
     e.preventDefault();
     this.cumService.passingNumberTolist.next(3);
-
   }
-
+  // function to responde on error trucks button click
   onETButtonClick(e: Event) {
     e.preventDefault();
     this.cumService.passingNumberTolist.next(2);

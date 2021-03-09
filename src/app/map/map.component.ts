@@ -1,9 +1,8 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { CommunicationService } from '../communication.service';
 import * as L from 'leaflet';
-import { delay, map, take, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { logging } from 'selenium-webdriver';
+import { map } from 'rxjs/operators';
+
 
 
 @Component({
@@ -12,13 +11,31 @@ import { logging } from 'selenium-webdriver';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit, AfterViewInit {
-  arr = [];
-  private map;
+  iconGreen: any;
+  iconBlue: any;
+  iconYellow: any;
+  iconRed: any;
+  private map: any;
   @Input() receivingFilteredList: any;
   constructor(private communicationServie: CommunicationService) { }
   layerGroup: any;
   count: number = 0;
   ngOnInit(): void {
+
+    // Creating custom marker class
+    const LeafIcon = L.Icon.extend({
+      options: {
+        iconSize: [38, 40],
+        shadowSize: [50, 64],
+        iconAnchor: [25, 62],
+      }
+    });
+    // Initializing custom marker class
+    this.iconBlue = new LeafIcon({ iconUrl: '../../assets/truck-icon-blue.png' });
+    this.iconRed = new LeafIcon({ iconUrl: '../../assets/truck-icon-red.png' });
+    this.iconGreen = new LeafIcon({ iconUrl: '../../assets/truck-icon-green.png' });
+    this.iconYellow = new LeafIcon({ iconUrl: '../../assets/truck-icon-yellow.png' });
+
 
   }// End of init
 
@@ -27,9 +44,10 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.communicationServie.passingFilteredArrayToMap
       ?.pipe(
         map(data => {
+          console.log(data[0]);
           const arr = [];
-          for (let { latitude, longitude } of data) {
-            arr.push([latitude, longitude]);
+          for (let { latitude, longitude, truckErrorStatus, truckIdleStatus, truckRunningState } of data) {
+            arr.push({ latitude: latitude, longitude: longitude, truckErrorStatus: truckErrorStatus, truckIdleStatus: truckIdleStatus, truckRunningState: truckRunningState });
           }
           return arr;
         })
@@ -52,10 +70,21 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   }
 
-  private addingMarker(para: any) {
+  private addingMarker(para: any[]) {
     this.layerGroup.clearLayers();
-    para.forEach((element: any[]) => {
-      L.marker([element[0], element[1]]).addTo(this.layerGroup);
+    para.forEach((ele: any) => {
+      if (ele.truckErrorStatus) {
+        L.marker([ele.latitude, ele.longitude], { icon: this.iconRed }).addTo(this.layerGroup);
+      }
+      else if (ele.truckRunningState) {
+        L.marker([ele.latitude, ele.longitude], { icon: this.iconGreen }).addTo(this.layerGroup);
+      }
+      else if (ele.truckIdleStatus) {
+        L.marker([ele.latitude, ele.longitude], { icon: this.iconYellow }).addTo(this.layerGroup);
+      }
+      else {
+        L.marker([ele.latitude, ele.longitude], { icon: this.iconBlue }).addTo(this.layerGroup);
+      }
     });
 
   }

@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { BehaviorSubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 
 @Injectable({
@@ -21,10 +20,20 @@ export class MapService implements OnInit {
     this.http.get<{ responseCode: object, data: object[] }>(this.url)
       .pipe(
         take(1),
+        // Modifying the response
         map(response => {
           const { data } = JSON.parse(JSON.stringify(response));
           for (let { truckNumber, lastWaypoint: { speed, ignitionOn, updateTime, lat, lng }, lastRunningState: { stopStartTime, truckRunningState } } of data) {
-
+            // Adding trucks error and idle status
+            let truckErrorStatus = false;
+            let truckIdleStatus = false;
+            if (new Date(updateTime).getHours() < 10) {
+              truckErrorStatus = true
+            }
+            if (ignitionOn && !truckRunningState) {
+              truckIdleStatus = true;
+            }
+            // Calculating delay in trucks response
             let delay: string;
             if (new Date().getDay() - new Date(stopStartTime).getDay()) {
               delay = `${new Date().getDay() - new Date(stopStartTime).getDay()} d`;
@@ -34,7 +43,8 @@ export class MapService implements OnInit {
             else {
               delay = `${new Date().getMinutes() - new Date(stopStartTime).getMinutes()} m`;
             }
-            const obj = { truckNumber: truckNumber, speed: speed, ignitionOn: ignitionOn, updateTime: updateTime, stopStartTime: delay, truckRunningState: truckRunningState, latitude: lat, longitude: lng }
+            // Creating and passing the object with useful data to application
+            const obj = { truckNumber: truckNumber, speed: speed, ignitionOn: ignitionOn, updateTime: updateTime, stopStartTime: delay, truckRunningState: truckRunningState, latitude: lat, longitude: lng, truckErrorStatus: truckErrorStatus, truckIdleStatus: truckIdleStatus }
             this.trucksDetails.push(obj);
           }
           return this.trucksDetails;
