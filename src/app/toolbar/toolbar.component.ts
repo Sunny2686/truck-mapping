@@ -11,18 +11,28 @@ import { MapService } from '../map.service';
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   truckNumberArray: string[] = [];
+
+  //Storing truck number for every trucks
   idleTruck: number = 0;
   errorTruck: number = 0;
   runningTruck: number = 0;
   stoppedTruck: number = 0;
+  runningTruckSaved: number;
+  stoppedTruckSaved: number;
+  errorTruckSaved: number;
+  idleTruckSaved: number;
+  truckLengthSaved: number;
+
   myForm: FormGroup;
+
   formSubscripition: Subscription;
   responseSubscription: Subscription;
+  selectorValue: any[] = [];
 
   constructor(private mapservice: MapService, private cumService: CommunicationService) { }
 
   ngOnInit(): void {
-    // Initializing form
+    // Initializing form for selector
     this.myForm = new FormGroup({
       selectFormControl: new FormControl(null)
     })
@@ -33,17 +43,50 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           for (let { truckNumber, truckRunningState, truckErrorStatus, truckIdleStatus } of data) {
             this.truckNumberArray.push(truckNumber);
+            this.selectorValue.push({ truckNumber, truckRunningState, truckErrorStatus, truckIdleStatus });
             truckRunningState ? this.runningTruck++ : this.stoppedTruck++;
             if (truckIdleStatus) this.idleTruck++;
             if (truckErrorStatus) this.errorTruck++;
           }
+          //Saving truck status
+          this.runningTruckSaved = this.runningTruck;
+          this.stoppedTruckSaved = this.stoppedTruck;
+          this.errorTruckSaved = this.errorTruck;
+          this.idleTruckSaved = this.idleTruck;
+          this.truckLengthSaved = this.truckNumberArray.length;
         }
       });
 
     //Pasing selector value to truck list
-    this.formSubscripition = this.myForm.get('selectFormControl').valueChanges.subscribe((val) => {
-      this.cumService.passingSelectorValueArray.next(val)
-    })
+    this.formSubscripition = this.myForm.get('selectFormControl').valueChanges
+      .subscribe((val) => {
+        this.cumService.passingSelectorValueArray.next(val);
+
+        this.truckLengthSaved = 0;
+        this.runningTruck = 0;
+        this.stoppedTruck = 0;
+        this.idleTruck = 0;
+        this.errorTruck = 0;
+
+
+        for (let { truckNumber, truckRunningState, truckErrorStatus, truckIdleStatus } of this.selectorValue) {
+          if (val.includes(truckNumber)) {
+
+            truckRunningState ? this.runningTruck++ : this.stoppedTruck++;
+            if (truckIdleStatus) this.idleTruck++;
+            if (truckErrorStatus) this.errorTruck++;
+            this.truckLengthSaved++;
+          }
+        }// End of for loop
+        if (val.length === 0) {
+          this.runningTruck = this.runningTruckSaved;
+          this.stoppedTruck = this.stoppedTruckSaved;
+          this.errorTruck = this.errorTruckSaved;
+          this.idleTruck = this.idleTruckSaved;
+          this.truckLengthSaved = this.truckNumberArray.length;
+        }
+
+      });//End of selector subscribe.
 
   }
   // function to responde on total trucks button click
