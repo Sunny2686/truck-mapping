@@ -29,17 +29,15 @@ font-size: 1.2rem;
   overflow: scroll;
 }
 .list-item-class{
-  height: 100%;
 display: flex;
 justify-content: space-between;
 align-items:flex-start;
 width: 100%;
 border-bottom:1px solid grey;
 overflow: hidden;
-height: 86px !important;
+height: 5.5rem !important;
 color: #000;
 }
-
 
 .error{
 background-color: rgb(150, 24, 24) !important;
@@ -55,13 +53,19 @@ p{
   margin-bottom: 0.5rem;
 }
 .list-item-left-class-para-one{
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   font-weight: 600;
   font-size: 1.2rem;
   color: #000;
+  word-wrap: break-word;
 
 }
 .list-item-left-class-para-two{
 color:rgb(82, 76, 76);
 font-size:1.1rem ;
+word-wrap: break-word;
+letter-spacing: 0.03rem;
 }
+
+
+

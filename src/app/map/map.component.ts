@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { CommunicationService } from '../communication.service';
 import * as L from 'leaflet';
-import { take, tap } from 'rxjs/operators';
+import { delay, map, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { logging } from 'selenium-webdriver';
 
 
 @Component({
@@ -15,7 +16,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   private map;
   @Input() receivingFilteredList: any;
   constructor(private communicationServie: CommunicationService) { }
-
+  layerGroup: any;
   count: number = 0;
   ngOnInit(): void {
 
@@ -24,11 +25,16 @@ export class MapComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.initMap();
     this.communicationServie.passingFilteredArrayToMap
-      .subscribe(ele => {
-        for (let { latitude, longitude } of ele) {
-          if (this.count < 30) L.marker([latitude, longitude]).addTo(this.map);
-          this.count++;
-        }
+      ?.pipe(
+        map(data => {
+          const arr = [];
+          for (let { latitude, longitude } of data) {
+            arr.push([latitude, longitude]);
+          }
+          return arr;
+        })
+      ).subscribe(ele => {
+        this.addingMarker(ele);
       });
   }
 
@@ -41,9 +47,18 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     tiles.addTo(this.map);
 
+    // Adding layer group to map
+    this.layerGroup = L.layerGroup().addTo(this.map);
 
   }
 
+  private addingMarker(para: any) {
+    this.layerGroup.clearLayers();
+    para.forEach((element: any[]) => {
+      L.marker([element[0], element[1]]).addTo(this.layerGroup);
+    });
+
+  }
 
 
 

@@ -47,7 +47,6 @@ export class ListComponent implements OnInit, OnDestroy {
         for (let ele of data) {
           this.allTrucksDetails.push(ele);
         }
-        console.dir(this.allTrucksDetails);
 
         // Auto-filter trucks based on user input
         this.filteredTruck1Subscription = this.myControl.valueChanges
@@ -95,7 +94,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
 
-  }// End of ngon init
+  }// End of ng on init
 
 
   // Filtering truck list data based on user input
@@ -108,32 +107,33 @@ export class ListComponent implements OnInit, OnDestroy {
     } else if (typeof value === 'number') {
       return this.allTrucksDetails.filter(option => {
 
-        //Total truck list
+        //Total truck list (value = 10)
         if (value === 10) {
           this.errorTruck = false;
           return true;
         }
-        //Running trucks list
+        //Running trucks list (value = 1)
         else if (value === 1) {
           this.errorTruck = false;
           return option.truckRunningState === value;
-          //Stopped truck list
+          //Stopped truck list(value = 0)
         } else if (value === 0) {
           this.errorTruck = false;
           return option.truckRunningState === value;
         }
-        //Idle truck list
+        //Idle truck list(value = 3)
         else if (value === 3) {
           this.errorTruck = false;
           return option.ignitionOn && !option.truckRunningState;
         }
-        //Error truck list
+        //Error truck list (value = 2)
         else if (value === 2) {
           this.errorTruck = true;
           return new Date(option.updateTime).getHours() < 10;
         }
       });
     } else {
+      //Filtering for selector truck list
       return this.allTrucksDetails.filter(option => {
         this.errorTruck = false;
         return value.includes(option.truckNumber);
