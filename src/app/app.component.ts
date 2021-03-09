@@ -1,6 +1,7 @@
 import { OnInit, Output } from '@angular/core';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
+import { MapService } from './map.service';
 
 
 @Component({
@@ -9,11 +10,13 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor() {
-
-  }
+  noError: boolean = true;
+  constructor(private mapservice: MapService) { }
 
   ngOnInit() {
+    this.mapservice.errorResponse.subscribe(() => {
+      this.noError = false;
+    });
   }
 
 

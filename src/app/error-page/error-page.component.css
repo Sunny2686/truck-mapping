@@ -1,0 +1,17 @@
+:host{
+  display: grid;
+  height: 100vh;
+
+  place-items: center;
+}
+.error-msg{
+
+  background-color: rgba(126, 31, 31, 0.692);
+  color: black;
+  font-size: 1.7rem;
+  border: 1px  solid yellowgreen;
+  padding:8rem;
+  line-height: 1.7rem;
+  text-align: center;
+  letter-spacing: 0.2rem;
+}

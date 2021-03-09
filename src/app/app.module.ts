@@ -11,6 +11,7 @@ import { ListComponent } from './list/list.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
     MapComponent,
     ListComponent,
     ToolbarComponent,
+    ErrorPageComponent,
   ],
   imports: [
     BrowserModule,

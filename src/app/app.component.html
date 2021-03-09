@@ -1,7 +1,8 @@
-<section fxLayout="column">
+<section fxLayout="column" *ngIf="noError">
   <app-toolbar></app-toolbar>
   <div class="below-toolbar" fxLayout fxLayoutAlign="start center">
-    <app-list></app-list>
-    <app-map style="width: 100%; height: 98%"></app-map>
+    <app-list fxFlex="22"></app-list>
+    <app-map style="width: 100%; height: 98%" fxFill></app-map>
   </div>
 </section>
+<app-error-page *ngIf="!noError"></app-error-page>

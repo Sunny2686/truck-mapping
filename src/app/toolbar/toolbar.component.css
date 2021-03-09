@@ -45,13 +45,8 @@ mat-toolbar{
 mat-label, mat-option{
   font-size: calc(0.5rem + 0.6vw) !important;
   letter-spacing: 0.1vw !important;
-  font-weight: normal !important;
-  line-height: 3em;
 }
-mat-label{
-  position:relative  !important;
-  margin-bottom: 10px !important;
-}
+
 .toolbar-select{
   height: inherit;
   margin-right: 1rem;

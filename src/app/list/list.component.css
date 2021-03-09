@@ -19,6 +19,8 @@ height: 40px;
 border-style: none;
 border-bottom:1px solid grey;
 font-size: 1.2rem;
+outline: none;
+margin-left: -5rem;
 }
 
 .truck-list {
@@ -48,6 +50,7 @@ margin-left: 0.69rem;
 .list-item-left-class{
   margin-right: 1.4rem;
   margin-left: -0.6rem;
+
 }
 p{
   margin-bottom: 0.5rem;
@@ -55,14 +58,19 @@ p{
 .list-item-left-class-para-one{
   letter-spacing: 0.15em;
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #000;
   word-wrap: break-word;
-
+  position: relative;
 }
+.mat-icon-class{
+  position: absolute;
+  padding-left: 8px;
+}
+
 .list-item-left-class-para-two{
 color:rgb(82, 76, 76);
-font-size:1.1rem ;
+font-size:1rem ;
 word-wrap: break-word;
 letter-spacing: 0.03rem;
 }

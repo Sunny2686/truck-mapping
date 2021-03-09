@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { CommunicationService } from '../communication.service';
 import * as L from 'leaflet';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 
 
@@ -44,7 +44,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.communicationServie.passingFilteredArrayToMap
       ?.pipe(
         map(data => {
-          console.log(data[0]);
           const arr = [];
           for (let { latitude, longitude, truckErrorStatus, truckIdleStatus, truckRunningState } of data) {
             arr.push({ latitude: latitude, longitude: longitude, truckErrorStatus: truckErrorStatus, truckIdleStatus: truckIdleStatus, truckRunningState: truckRunningState });

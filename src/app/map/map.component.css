@@ -1,5 +1,11 @@
+:host{
+  display: grid;
+}
+
 .map-container{
 height: inherit;
+display: grid;
+grid-template-columns: 1fr;
 
 }
 .map-frame{

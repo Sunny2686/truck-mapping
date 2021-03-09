@@ -24,18 +24,21 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Initializing form
     this.myForm = new FormGroup({
-      selectFormControl: new FormControl(null, Validators.required)
+      selectFormControl: new FormControl(null)
     })
 
     // Taking and maupulating response
-    this.responseSubscription = this.mapservice.responseArray.subscribe((data: any) => {
-      for (let { truckNumber, truckRunningState, truckErrorStatus, truckIdleStatus } of data) {
-        this.truckNumberArray.push(truckNumber);
-        truckRunningState ? this.runningTruck++ : this.stoppedTruck++;
-        if (truckIdleStatus) this.idleTruck++;
-        if (truckErrorStatus) this.errorTruck++;
-      }
-    });
+    this.responseSubscription = this.mapservice.responseArray.subscribe(
+      {
+        next: (data: any) => {
+          for (let { truckNumber, truckRunningState, truckErrorStatus, truckIdleStatus } of data) {
+            this.truckNumberArray.push(truckNumber);
+            truckRunningState ? this.runningTruck++ : this.stoppedTruck++;
+            if (truckIdleStatus) this.idleTruck++;
+            if (truckErrorStatus) this.errorTruck++;
+          }
+        }
+      });
 
     //Pasing selector value to truck list
     this.formSubscripition = this.myForm.get('selectFormControl').valueChanges.subscribe((val) => {
