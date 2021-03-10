@@ -1,6 +1,7 @@
 import { OnInit, Output } from '@angular/core';
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { CommunicationService } from './communication.service';
 import { MapService } from './map.service';
 
 
@@ -11,15 +12,31 @@ import { MapService } from './map.service';
 })
 export class AppComponent implements OnInit {
   noError: boolean = true;
-  constructor(private mapservice: MapService) { }
+  isLoading: boolean = false;
+  errorSubscription: Subscription;
+  loadingSubscription: Subscription;
+
+
+
+  constructor(private mapservice: MapService, private cumService: CommunicationService) { }
 
   ngOnInit() {
-    this.mapservice.errorResponse.subscribe(() => {
+    this.errorSubscription = this.mapservice.errorResponse.subscribe(() => {
       this.noError = false;
     });
+    this.loadingSubscription = this.cumService.loadingSpinnerSubject.subscribe(val => {
+      this.isLoading = val;
+      console.log(this.isLoading);
+    });
+
   }
 
 
+
+  ngOnDestroy() {
+    this.errorSubscription.unsubscribe();
+    this.loadingSubscription.unsubscribe();
+  }
 
 
 }

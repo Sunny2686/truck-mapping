@@ -8,6 +8,7 @@ import { Subject, BehaviorSubject } from "rxjs";
 
 export class CommunicationService {
 
+  loadingSpinnerSubject = new Subject<any>();
   passingNumberTolist = new Subject<number>();
   passingFilteredArrayToMap = new Subject<any[]>();
   passingSelectorValueArray = new BehaviorSubject<string[]>([]);

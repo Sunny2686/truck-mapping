@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 import { Injectable } from '@angular/core';
-import { Subject, throwError } from 'rxjs';
-import { catchError, map, take } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { map, take, tap } from 'rxjs/operators';
+import { CommunicationService } from './communication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,15 @@ export class MapService implements OnInit {
   responseArray = new Subject<any[]>();
   errorResponse = new Subject<any>();
   trucksDetails: any[] = [];
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private comService: CommunicationService) {
 
     //Making an API call to serve
     this.http.get<{ responseCode: object, data: object[] }>(this.url, {
       responseType: 'json'
     })
       .pipe(
+        // Loading spinner response
+        tap(() => this.comService.loadingSpinnerSubject.next(true)),
         take(1),
         // Modifying the response
         map(response => {
@@ -30,7 +33,7 @@ export class MapService implements OnInit {
             // Adding trucks error and idle status
             let truckErrorStatus = false;
             let truckIdleStatus = false;
-            if (new Date(updateTime).getHours() < 10) {
+            if (new Date(updateTime).getHours() < 4) {
               truckErrorStatus = true
             }
             if (ignitionOn && !truckRunningState) {
@@ -55,6 +58,7 @@ export class MapService implements OnInit {
       ).subscribe({
         next: (response) => {
           this.responseArray.next(response);
+          this.comService.loadingSpinnerSubject.next(false);
         },
         error: () => {
           this.errorResponse.next();

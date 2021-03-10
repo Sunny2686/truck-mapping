@@ -12,6 +12,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     ListComponent,
     ToolbarComponent,
     ErrorPageComponent,
+    LoadingSpinnerComponent,
   ],
   imports: [
     BrowserModule,

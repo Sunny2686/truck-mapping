@@ -13,11 +13,11 @@ import { MapService } from '../map.service';
 export class ListComponent implements OnInit, OnDestroy {
 
   filteredTrucksList: any[];
-  subscription: Subscription;
+  filteredTrucksnewList: any[];
+  responseSubscription: Subscription;
   filteredTruck2Subscription: Subscription;
   filteredTruck1Subscription: Subscription;
   passingSelectorValueArraySubs: Subscription;
-  containerBoolean: boolean = true;
   allTrucksDetails = [];
   allTrucksNumber: string[] = [];
   myControl = new FormControl();
@@ -28,57 +28,47 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.mapservice.responseArray
+    this.responseSubscription = this.mapservice.responseArray
       .subscribe(data => {
-        this.allTrucksDetails = data
-        // for (let ele of data) {
-        //   this.allTrucksDetails.push(ele);
-        // }
-
-        // Auto-filter trucks based on user input
-        this.filteredTruck1Subscription = this.myControl.valueChanges
-          .pipe(
-            tap(() => this.containerBoolean = true),
-            startWith(''),
-            map(value => this.filterInputValue(value))
-          ).subscribe(val => {
-            this.filteredTrucksList = val;
-            this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
-          });
-
-
-        // Auto-filter trucks based on button click
-        this.filteredTruck2Subscription = this.cumService.passingNumberTolist.
-          pipe(
-            tap(() => {
-              this.containerBoolean = false;
-            }),
-            startWith(''),
-            map(value => this.filterInputValue(value))
-          ).subscribe(val => {
-            this.filteredTrucksList = val;
-            this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
-          });
-
-        //  Auto-filter trucks based on header toolbar selector
-        this.passingSelectorValueArraySubs = this.cumService.passingSelectorValueArray.
-          pipe(
-            tap(() => {
-              this.containerBoolean = false;
-            }),
-            startWith(''),
-            map(value => this.filterInputValue(value)))
-          .subscribe(val => {
-            this.filteredTrucksList = val
-            if (val.length === 0) {
-              for (let ele of this.allTrucksDetails) {
-                this.filteredTrucksList.push(ele);
-              }
-            }
-            this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
-          });
-
+        this.allTrucksDetails = data;
       });// End of response subscribe
+
+
+    // Auto-filter trucks based on user input
+    this.filteredTruck1Subscription = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this.filterInputValue(value))
+      ).subscribe(val => {
+        console.log(this.filteredTrucksList);
+        this.filteredTrucksList = val;
+        this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
+      });
+
+
+    // Auto-filter trucks based on button click
+    this.filteredTruck2Subscription = this.cumService.passingNumberTolist.
+      pipe(
+        startWith(''),
+        map(value => this.filterInputValue(value))
+      ).subscribe(val => {
+        this.filteredTrucksList = val;
+        this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
+      });
+
+    //  Auto-filter trucks based on header toolbar selector
+    this.passingSelectorValueArraySubs = this.cumService.passingSelectorValueArray.
+      pipe(
+        startWith(''),
+        map(value => this.filterInputValue(value)))
+      .subscribe(val => {
+        this.filteredTrucksList = val
+        if (val.length === 0) {
+          this.filteredTrucksList = this.allTrucksDetails;
+        }
+        this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
+      });
+
 
   }// End of ng on init
 
@@ -116,7 +106,7 @@ export class ListComponent implements OnInit, OnDestroy {
         //Error truck list (assigned value = 2)
         else if (value === 2) {
           this.errorTruck = true;
-          return new Date(option.updateTime).getHours() < 10;
+          return new Date(option.updateTime).getHours() < 4;
         }
       });
     } else {
@@ -130,7 +120,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.responseSubscription.unsubscribe();
     this.filteredTruck1Subscription.unsubscribe();
     this.filteredTruck2Subscription.unsubscribe();
     this.passingSelectorValueArraySubs.unsubscribe();
