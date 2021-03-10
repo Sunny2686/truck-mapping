@@ -1,7 +1,8 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/Operators';
+import { map, startWith } from 'rxjs/Operators';
+import { SubSink } from 'subsink';
 import { CommunicationService } from '../communication.service';
 import { MapService } from '../map.service';
 
@@ -12,13 +13,9 @@ import { MapService } from '../map.service';
 })
 export class ListComponent implements OnInit, OnDestroy {
 
-  filteredTrucksList: any[];
-  filteredTrucksnewList: any[];
-  responseSubscription: Subscription;
-  filteredTruck2Subscription: Subscription;
-  filteredTruck1Subscription: Subscription;
-  passingSelectorValueArraySubs: Subscription;
-  allTrucksDetails = [];
+  filteredTrucksList: any[] = [];
+  subs = new SubSink();
+  allTrucksDetails: any[] = [];
   allTrucksNumber: string[] = [];
   myControl = new FormControl();
   errorTruck: boolean = false;
@@ -28,26 +25,24 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.responseSubscription = this.mapservice.responseArray
+    this.subs.sink = this.mapservice.responseArray
       .subscribe(data => {
         this.allTrucksDetails = data;
       });// End of response subscribe
 
-
     // Auto-filter trucks based on user input
-    this.filteredTruck1Subscription = this.myControl.valueChanges
+    this.subs.sink = this.myControl.valueChanges
       .pipe(
         startWith(''),
         map(value => this.filterInputValue(value))
       ).subscribe(val => {
-        console.log(this.filteredTrucksList);
         this.filteredTrucksList = val;
         this.cumService.passingFilteredArrayToMap.next(this.filteredTrucksList);
       });
 
 
     // Auto-filter trucks based on button click
-    this.filteredTruck2Subscription = this.cumService.passingNumberTolist.
+    this.subs.sink = this.cumService.passingNumberTolist.
       pipe(
         startWith(''),
         map(value => this.filterInputValue(value))
@@ -57,7 +52,7 @@ export class ListComponent implements OnInit, OnDestroy {
       });
 
     //  Auto-filter trucks based on header toolbar selector
-    this.passingSelectorValueArraySubs = this.cumService.passingSelectorValueArray.
+    this.subs.sink = this.cumService.passingSelectorValueArray.
       pipe(
         startWith(''),
         map(value => this.filterInputValue(value)))
@@ -120,10 +115,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.responseSubscription.unsubscribe();
-    this.filteredTruck1Subscription.unsubscribe();
-    this.filteredTruck2Subscription.unsubscribe();
-    this.passingSelectorValueArraySubs.unsubscribe();
+    this.subs.unsubscribe();
   }
 
 }// End of class

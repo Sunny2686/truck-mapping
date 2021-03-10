@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { CommunicationService } from '../communication.service';
 import * as L from 'leaflet';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { SubSink } from 'subsink';
 
 
 
@@ -11,12 +12,13 @@ import { map, take } from 'rxjs/operators';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit, AfterViewInit {
-  iconGreen: any;
-  iconBlue: any;
-  iconYellow: any;
-  iconRed: any;
+  subs = new SubSink();
+  iconGreen: object;
+  iconBlue: object;
+  iconYellow: object;
+  iconRed: object;
   private map: any;
-  @Input() receivingFilteredList: any;
+
   constructor(private communicationServie: CommunicationService) { }
   layerGroup: any;
   count: number = 0;
@@ -41,12 +43,12 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.communicationServie.passingFilteredArrayToMap
+    this.subs.sink = this.communicationServie.passingFilteredArrayToMap
       ?.pipe(
         map(data => {
           const arr = [];
           for (let { latitude, longitude, truckErrorStatus, truckIdleStatus, truckRunningState } of data) {
-            arr.push({ latitude: latitude, longitude: longitude, truckErrorStatus: truckErrorStatus, truckIdleStatus: truckIdleStatus, truckRunningState: truckRunningState });
+            arr.push({ latitude, longitude, truckErrorStatus, truckIdleStatus, truckRunningState });
           }
           return arr;
         })
@@ -71,6 +73,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private addingMarker(para: any[]) {
     this.layerGroup.clearLayers();
+
     para.forEach((ele: any) => {
       if (ele.truckErrorStatus) {
         L.marker([ele.latitude, ele.longitude], { icon: this.iconRed }).addTo(this.layerGroup);
@@ -89,5 +92,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
 
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
 
 }

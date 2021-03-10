@@ -26,7 +26,6 @@ export class AppComponent implements OnInit {
     });
     this.loadingSubscription = this.cumService.loadingSpinnerSubject.subscribe(val => {
       this.isLoading = val;
-      console.log(this.isLoading);
     });
 
   }

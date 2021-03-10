@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { SubSink } from 'subsink';
 import { CommunicationService } from '../communication.service';
 import { MapService } from '../map.service';
 
@@ -11,7 +12,7 @@ import { MapService } from '../map.service';
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   truckNumberArray: string[] = [];
-
+  subs = new SubSink();
   //Storing truck number for every trucks
   idleTruck: number = 0;
   errorTruck: number = 0;
@@ -24,9 +25,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   truckLengthSaved: number;
 
   myForm: FormGroup;
-
-  formSubscripition: Subscription;
-  responseSubscription: Subscription;
   selectorValue: any[] = [];
 
   constructor(private mapservice: MapService, private cumService: CommunicationService) { }
@@ -38,7 +36,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     })
 
     // Taking and maupulating response
-    this.responseSubscription = this.mapservice.responseArray.subscribe(
+    this.subs.sink = this.mapservice.responseArray.subscribe(
       {
         next: (data: any) => {
           for (let { truckNumber, truckRunningState, truckErrorStatus, truckIdleStatus } of data) {
@@ -58,7 +56,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       });
 
     //Pasing selector value to truck list
-    this.formSubscripition = this.myForm.get('selectFormControl').valueChanges
+    this.subs.sink = this.myForm.get('selectFormControl').valueChanges
       .subscribe((val) => {
         this.cumService.passingSelectorValueArray.next(val);
 
@@ -116,8 +114,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.formSubscripition.unsubscribe();
-    this.responseSubscription.unsubscribe();
+    this.subs.unsubscribe();
+    this.subs.unsubscribe();
   }
 
 

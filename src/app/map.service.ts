@@ -17,8 +17,15 @@ export class MapService implements OnInit {
   errorResponse = new Subject<any>();
   trucksDetails: any[] = [];
   constructor(private http: HttpClient, private comService: CommunicationService) {
-
     //Making an API call to serve
+    this.getTruckAPI();
+
+  }
+
+  ngOnInit() { }
+
+  getTruckAPI(): void {
+
     this.http.get<{ responseCode: object, data: object[] }>(this.url, {
       responseType: 'json'
     })
@@ -50,7 +57,7 @@ export class MapService implements OnInit {
               delay = `${new Date().getMinutes() - new Date(stopStartTime).getMinutes()} m`;
             }
             // Creating and passing the object with useful data to application
-            const obj = { truckNumber: truckNumber, speed: speed, ignitionOn: ignitionOn, updateTime: updateTime, stopStartTime: delay, truckRunningState: truckRunningState, latitude: lat, longitude: lng, truckErrorStatus: truckErrorStatus, truckIdleStatus: truckIdleStatus }
+            const obj = { truckNumber, speed, ignitionOn, updateTime, stopStartTime: delay, truckRunningState, latitude: lat, longitude: lng, truckErrorStatus, truckIdleStatus };
             this.trucksDetails.push(obj);
           }
           return this.trucksDetails;
@@ -64,10 +71,9 @@ export class MapService implements OnInit {
           this.errorResponse.next();
         }
       });
-  }
 
-  ngOnInit() {
 
-  }
+  }// end of method gettruckapi
+
 
 }
